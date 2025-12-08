@@ -1,64 +1,61 @@
 <?php
 $db_file = 'proiect.db';
 
-echo "<h1>Populare Bază de Date</h1>";
-echo "<a href='index.php'>🏠 Mergi la Prima Pagină (Meniu)</a><hr>";
+echo "<h1>Populare Baza de Date</h1>";
+echo "<a href='index.php'> Mergi la Prima Pagina (Meniu)</a><hr>";
 
 try {
-    // 1. Ne conectăm la baza de date existentă
     if (!file_exists($db_file)) {
-        throw new Exception("Eroare: Baza de date nu există! Rulați mai întâi setup.php.");
+        throw new Exception("Eroare: Baza de date nu exista! Rulati setup.php o singura data la inceput.");
     }
     $db = new SQLite3($db_file);
 
-    // Începem o "tranzacție" (totul sau nimic) pentru siguranță
+    // 1. Începem tranzacția
     $db->exec('BEGIN');
-
-    // ETAPA 1: Introducem STUDENȚII (fără medii, se calculează singure)
-
     
-    // 1. Popa Ion
-    $db->exec("INSERT OR IGNORE INTO Studenti (nr_legitimatie, nume, prenume) VALUES ('123456', 'Popa', 'Ion')");
+    // Ștergem mai întâi NOTELE (copilul), apoi STUDENȚII (părintele)
+    // pentru a nu avea erori de cheie externă.
+    $db->exec("DELETE FROM Note");
+    $db->exec("DELETE FROM Studenti");
 
-    // 2. Adam Gheorghe
-    $db->exec("INSERT OR IGNORE INTO Studenti (nr_legitimatie, nume, prenume) VALUES ('123457', 'Adam', 'Gheorghe')");
+    // Resetăm contorul pentru ID-uri (ca să înceapă iar de la 1 la Note)
+    $db->exec("DELETE FROM sqlite_sequence WHERE name='Note'");
 
-    // 3. Pop George
-    $db->exec("INSERT OR IGNORE INTO Studenti (nr_legitimatie, nume, prenume) VALUES ('123458', 'Pop', 'George')");
+    echo "<p style='color:blue;'>Datele vechi au fost șterse. Se introduc datele curate...</p>";
 
-    echo "<p>✅ Studenții au fost adăugați.</p>";
+    // 1. Introducem STUDENȚII
+    $db->exec("INSERT INTO Studenti (nr_legitimatie, nume, prenume) VALUES ('123456', 'Popa', 'Ion')");
+    $db->exec("INSERT INTO Studenti (nr_legitimatie, nume, prenume) VALUES ('123457', 'Adam', 'Gheorghe')");
+    $db->exec("INSERT INTO Studenti (nr_legitimatie, nume, prenume) VALUES ('123458', 'Pop', 'George')");
 
-    // ETAPA 2: Introducem NOTELE (Aici se activează Trigger-ul!)
+    echo "<p>Studentii au fost adaugati.</p>";
 
-    // Note pentru Popa Ion 
-    // Matematica, An 1, Nota 4
-    $db->exec("INSERT INTO Note (nr_legitimatie_stud, disciplina, an_studiu, nr_prezentare, data_prezentarii, nota_obtinuta) VALUES ('123456', 'Matematica', 1, 1, '2003-12-22', 4)");
+    // 2. Introducem NOTELE (Trigger-ul se va activa automat)
     
-    // Chimie, An 2, Nota 10
-    $db->exec("INSERT INTO Note (nr_legitimatie_stud, disciplina, an_studiu, nr_prezentare, data_prezentarii, nota_obtinuta) VALUES ('123456', 'Chimie', 2, 1, '2004-03-01', 10)");
+    // Note Popa Ion
+    $db->exec("INSERT INTO Note (nr_legitimatie_stud, disciplina, an_studiu, nr_prezentare, data_prezentarii, nota_obtinuta) 
+               VALUES ('123456', 'Matematica', 1, 1, '2003-12-22', 4)");
+    $db->exec("INSERT INTO Note (nr_legitimatie_stud, disciplina, an_studiu, nr_prezentare, data_prezentarii, nota_obtinuta) 
+               VALUES ('123456', 'Chimie', 2, 1, '2004-03-01', 10)");
+    $db->exec("INSERT INTO Note (nr_legitimatie_stud, disciplina, an_studiu, nr_prezentare, data_prezentarii, nota_obtinuta) 
+               VALUES ('123456', 'Engleza', 3, 2, '2005-09-02', 9)");
 
-    // Engleza, An 3, Nota 9
-    $db->exec("INSERT INTO Note (nr_legitimatie_stud, disciplina, an_studiu, nr_prezentare, data_prezentarii, nota_obtinuta) VALUES ('123456', 'Engleza', 3, 2, '2005-09-02', 9)");
+    // Note Adam Gheorghe
+    $db->exec("INSERT INTO Note (nr_legitimatie_stud, disciplina, an_studiu, nr_prezentare, data_prezentarii, nota_obtinuta) 
+               VALUES ('123457', 'Fizica', 1, 1, '2003-12-12', 9)");
 
+    // Note Pop George
+    $db->exec("INSERT INTO Note (nr_legitimatie_stud, disciplina, an_studiu, nr_prezentare, data_prezentarii, nota_obtinuta) 
+               VALUES ('123458', 'Matematica', 1, 1, '2002-12-12', 10)");
 
-    // Note pentru Adam Gheorghe 
-    // Fizica, An 1, Nota 9
-    $db->exec("INSERT INTO Note (nr_legitimatie_stud, disciplina, an_studiu, nr_prezentare, data_prezentarii, nota_obtinuta) VALUES ('123457', 'Fizica', 1, 1, '2003-12-12', 9)");
+    echo "<p>✅ Notele au fost adăugate și mediile recalculate.</p>";
 
-
-    // Note pentru Pop George 
-    // Matematica, An 1, Nota 10
-    $db->exec("INSERT INTO Note (nr_legitimatie_stud, disciplina, an_studiu, nr_prezentare, data_prezentarii, nota_obtinuta) VALUES ('123458', 'Matematica', 1, 1, '2002-12-12', 10)");
-
-    echo "<p>✅ Notele au fost adăugate și mediile au fost recalculate automat de Trigger.</p>";
-
-    // Validăm tranzacția
+    // Validăm totul
     $db->exec('COMMIT');
     
-    echo "<h2>Popularea cu date s-a încheiat cu succes!</h2>";
+    echo "<h2>Baza de date este acum proaspata și fara duplicate!</h2>";
 
 } catch (Exception $e) {
-    // Dacă apare o eroare, anulăm tot ce am făcut în acest script
     $db->exec('ROLLBACK');
     echo "<p style='color:red;'>Eroare: " . $e->getMessage() . "</p>";
 }
