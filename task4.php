@@ -21,19 +21,19 @@
 
     <?php
     try {
-        // 1. Conectare la baza de date
+        //Conectare la baza de date
         $db = new SQLite3('proiect.db');
 
-        // 2. Interogarea SQL. Selectăm Numele, Prenumele, Disciplina și Nota. Legam tabela Note de Studenți prin ID-ul legitimației
+        //Interogarea SQL: selectam Numele, Prenumele, Disciplina si Nota. Legam tabela Note de Studenti prin ID-ul legitimatiei
         $sql = "SELECT S.nume, S.prenume, N.disciplina, N.nota_obtinuta, N.data_prezentarii 
                 FROM Note N
-                JOIN Studenti S ON N.nr_legitimatie_stud = S.nr_legitimatie
+                JOIN Studenti S ON N.nr_legitimatie_stud = S.nr_legitimatie --combina datele din tabela Note cu cele din Studenti ptr a putea afisa numele studentului langa nota primita
                 WHERE N.nota_obtinuta < 5
-                ORDER BY S.nume ASC";
+                ORDER BY S.nume ASC";//sorteaza lista alfabetica dupa numele studentului
 
         $result = $db->query($sql);
 
-        // 3. Afișarea Tabelului
+        //Afisarea tabelului
         echo "<table>";
         echo "<tr>
                 <th>Nume</th>
@@ -43,7 +43,7 @@
                 <th>Data</th>
               </tr>";
 
-        // Parcurgem rezultatele rând cu rând
+        //Parcurgem rezultatele rand cu rand
         while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
             echo "<tr>";
             echo "<td>" . htmlspecialchars($row['nume']) . "</td>";

@@ -21,7 +21,7 @@
     try {
         $db = new SQLite3('proiect.db');
 
-        // 1. Găsim studentul cu cele mai multe rânduri în tabela Note
+        //Gasim studentul cu cele mai multe randuri in tabela Note
         $sqlTop = "SELECT nr_legitimatie_stud, COUNT(*) as total_prezentari 
                    FROM Note 
                    GROUP BY nr_legitimatie_stud 
@@ -36,13 +36,12 @@
             $legitimatie = $resTop['nr_legitimatie_stud'];
             $totalPrezentari = $resTop['total_prezentari'];
 
-            // 2. Aflăm detaliile studentului (Nume, Prenume)
+            //Aflam detaliile studentului (Nume, Prenume)
             $stmtDetalii = $db->prepare("SELECT nume, prenume FROM Studenti WHERE nr_legitimatie = :id");
             $stmtDetalii->bindValue(':id', $legitimatie, SQLITE3_TEXT);
             $detalii = $stmtDetalii->execute()->fetchArray(SQLITE3_ASSOC);
 
-            // 3. Calculăm rata de promovabilitate pentru ACEST student
-            // (Examene cu nota >= 5 împărțit la Total Prezentări)
+            //Calculam rata de promovabilitate pentru ACEST student (Examene cu nota >= 5 impartit la Total Prezentari)
             $stmtPromovate = $db->prepare("SELECT COUNT(*) as reusite FROM Note WHERE nr_legitimatie_stud = :id AND nota_obtinuta >= 5");
             $stmtPromovate->bindValue(':id', $legitimatie, SQLITE3_TEXT);
             $resPromovate = $stmtPromovate->execute()->fetchArray(SQLITE3_ASSOC);
@@ -50,12 +49,12 @@
             $reusite = $resPromovate['reusite'];
             $procent = ($totalPrezentari > 0) ? ($reusite / $totalPrezentari) * 100 : 0;
 
-            // 4. Afișăm rezultatul
+            //Afisam rezultatul
             echo "<div class='winner-card'>";
-            echo "<h2>🏆 " . htmlspecialchars($detalii['nume'] . " " . $detalii['prenume']) . "</h2>";
+            echo "<h2>" . htmlspecialchars($detalii['nume'] . " " . $detalii['prenume']) . "</h2>";
             echo "<div class='stat'>Legitimatie: <strong>" . htmlspecialchars($legitimatie) . "</strong></div>";
             echo "<div class='stat'>Numar total prezentari: <strong>" . $totalPrezentari . "</strong></div>";
-            echo "<div class='stat'>Rata promovabilitate: <strong>" . number_format($procent, 2) . "%</strong> ($reusite examene luate)</div>";
+            echo "<div class='stat'>Rata de promovabilitate: <strong>" . number_format($procent, 2) . "%</strong> ($reusite examene luate)</div>";
             echo "</div>";
         }
 

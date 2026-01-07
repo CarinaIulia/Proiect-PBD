@@ -1,10 +1,10 @@
 DROP TABLE IF EXISTS Note;
 DROP TABLE IF EXISTS Studenti;
 
--- TASK 1 & 2 : Crearea structurii bazei de date:
+-- TASK 1 si 2 : Crearea structurii bazei de date:
 
 CREATE TABLE Studenti(
-    nr_legitimatie CHAR(6) PRIMARY KEY,
+    nr_legitimatie CHAR(6) PRIMARY KEY NOT NULL,
     nume VARCHAR(15) NOT NULL,
     prenume VARCHAR(20) NOT NULL,
     medie_generala DECIMAL(4,2) DEFAULT 0.00,
@@ -31,25 +31,24 @@ CREATE TABLE Note(
 -- TASK 7: Trigger-ul ptr calcului mediei:
 
 CREATE TRIGGER trigger_calcul_medii
-AFTER INSERT ON Note
+AFTER INSERT ON Note -- Trigger-ul se declanseaza automat dupa fiecare introducere a unei note
 FOR EACH ROW
 BEGIN
 
-    -- PASUL 1: Actualizăm media pe anul specific
-    -- (Folosind o sub-interogare în loc de WITH)
+    -- Actualizam media pe anul respectiv (Folosind o subinterogare)
     UPDATE Studenti
     SET 
         media_anul1 = CASE 
             WHEN NEW.an_studiu = 1 THEN (
-                SELECT AVG(nota_maxima) 
-                FROM (
+                SELECT AVG(nota_maxima) --dupa ce am obtinut o lista cu notele maxime ptr fiecare materie din anul 1, fctia AVG calculeaza media lor aritmetica
+                FROM ( --cauta toate notele studentului din anul 1
                     SELECT MAX(nota_obtinuta) AS nota_maxima
                     FROM Note
                     WHERE nr_legitimatie_stud = NEW.nr_legitimatie_stud AND an_studiu = 1
                     GROUP BY disciplina
                 )
             )
-            ELSE media_anul1 -- Lăsăm neschimbat
+            ELSE media_anul1 -- Lasam neschimbat
         END,
 
         media_anul2 = CASE 
@@ -79,8 +78,7 @@ BEGIN
         END
     WHERE nr_legitimatie = NEW.nr_legitimatie_stud;
 
-    -- PASUL 2: Actualizăm media generală
-    -- (O facem într-un al doilea UPDATE pentru a folosi valorile proaspăt calculate)
+    -- Actualizam media generala (media mediilor, nota finala pe toti anii de studiu parcursi pana in prezent)
     UPDATE Studenti
     SET medie_generala = (
         SELECT AVG(medie) 

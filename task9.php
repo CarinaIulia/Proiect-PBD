@@ -24,7 +24,7 @@
         $db = new SQLite3('proiect.db');
 
         // LOGICA SQL:
-        // Căutăm studenți unde (Nota maximă în Anul X < 5) ȘI (Nota maximă în Anul X+1 < 5)
+        // Cautam studenti unde (Nota maxima in Anul X < 5) SI (Nota maxima in Anul X+1 < 5)
         // Folosim UNION pentru a uni cazurile "Anul 1+2" cu "Anul 2+3"
         
         $sql = "
@@ -47,7 +47,7 @@
 
         $result = $db->query($sql);
 
-        // Verificăm dacă avem rezultate
+        // Verificam daca avem rezultate
         $found = false;
 
         echo "<table>";

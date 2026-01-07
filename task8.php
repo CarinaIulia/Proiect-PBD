@@ -18,20 +18,20 @@
 
     <form method="GET">
         <select name="disciplina">
-            <option value="Matematica">Matematica</option>
-            <option value="Fizica">Fizica</option>
-            <option value="Chimie">Chimie</option>
-            <option value="Engleza">Engleza</option>
+            <option value="">Selecteaza</option>
+            <option value="Matematica" <?php if($disciplinaSelectata == 'Matematica') echo 'selected'; ?>>Matematica</option>
+            <option value="Fizica" <?php if($disciplinaSelectata == 'Fizica') echo 'selected'; ?>>Fizica</option>
+            <option value="Chimie" <?php if($disciplinaSelectata == 'Chimie') echo 'selected'; ?>>Chimie</option>
+            <option value="Engleza" <?php if($disciplinaSelectata == 'Engleza') echo 'selected'; ?>>Engleza</option>
         </select>
         <button type="submit">Calculeaza</button>
     </form>
 
     <?php
-    // DEFINIREA FUNCȚIEI CERUTE (Task 8)
+    //Definirea functiei
     function calculeazaPromovabilitate($db, $numeDisciplina) {
-        // 1. Numărăm câți studenți au dat examenul la acea materie (Total)
-        // Folosim prepare() pentru securitate (împotriva SQL Injection)
-        $stmtTotal = $db->prepare("SELECT COUNT(*) as total FROM Note WHERE disciplina = :disc");
+        //Numaram cati studenti au dat examenul la acea materie. Folosim prepare() pentru securitate (impotriva SQL Injection)
+        $stmtTotal = $db->prepare("SELECT COUNT(*) as total FROM Note WHERE disciplina = :disc"); //:disc este un placeholder folosit ptr secritate, evitand injectarea de cod SQL
         $stmtTotal->bindValue(':disc', $numeDisciplina, SQLITE3_TEXT);
         $resTotal = $stmtTotal->execute()->fetchArray(SQLITE3_ASSOC);
         $total = $resTotal['total'];
@@ -40,20 +40,20 @@
             return "Nu există note pentru această disciplină.";
         }
 
-        // 2. Numărăm câți au promovat (Nota >= 5)
+        //Numaram cati studenti au promovat (Nota >= 5)
         $stmtPromovati = $db->prepare("SELECT COUNT(*) as promovati FROM Note WHERE disciplina = :disc AND nota_obtinuta >= 5");
         $stmtPromovati->bindValue(':disc', $numeDisciplina, SQLITE3_TEXT);
         $resPromovati = $stmtPromovati->execute()->fetchArray(SQLITE3_ASSOC);
         $promovati = $resPromovati['promovati'];
 
-        // 3. Calculăm procentul
+        //Calculam procentul
         $procent = ($promovati / $total) * 100;
         
-        // Returnăm textul formatat
-        return "Rata de promovare la <strong>$numeDisciplina</strong> este: " . number_format($procent, 2) . "% ($promovati din $total studenți).";
+        //Returnam textul formatat
+        return "Rata de promovare la <strong>$numeDisciplina</strong> este: " . number_format($procent, 2) . "% ($promovati din $total studenți)."; //fctia number_format($procent, 2) este folosita pentru a afiaa rezultatul cu fix doua zecimale
     }
 
-    // APLICAREA FUNCȚIEI (Dacă utilizatorul a apăsat butonul)
+    //APLICAREA FUNCTIEI (Daca utilizatorul a apasat butonul)
     if (isset($_GET['disciplina'])) {
         try {
             $db = new SQLite3('proiect.db');

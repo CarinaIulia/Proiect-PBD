@@ -24,16 +24,16 @@
         $db = new SQLite3('proiect.db');
 
         // Interogarea SQL
-        // 1. Selectăm datele studentului
-        // 2. Folosim MAX(N.an_studiu) pentru a găsi cel mai mare an
-        // 3. Facem GROUP BY pentru a comprima toate notele unui student într-un singur rând
+        //1. Selectam datele studentului
+        //2. Folosim MAX(N.an_studiu) pentru a gasi cel mai mare an
+        //3. Facem GROUP BY pentru a comprima toate notele unui student intr-un singur rand
         $sql = "SELECT S.nume, S.prenume, S.nr_legitimatie, MAX(N.an_studiu) as an_curent
                 FROM Studenti S
-                JOIN Note N ON S.nr_legitimatie = N.nr_legitimatie_stud
-                GROUP BY S.nr_legitimatie, S.nume, S.prenume
+                JOIN Note N ON S.nr_legitimatie = N.nr_legitimatie_stud --combina datele din tabela Studenti (S) cu cele din tabela Note (N) folosind nr de legitimatie ca punct de legatura
+                GROUP BY S.nr_legitimatie, S.nume, S.prenume --grupam toate notele aceluiasi student astfel incat fctia MAX sa poata gasi cel mai mare an de studiu specific fiecarui student in parte
                 ORDER BY S.nume ASC";
 
-        $result = $db->query($sql);
+        $result = $db->query($sql); //trimite interogarea catre baza de date si stocheaza rezultatele in viariabila $result
 
         echo "<table>";
         echo "<tr>
@@ -49,7 +49,7 @@
             echo "<td>" . htmlspecialchars($row['prenume']) . "</td>";
             echo "<td>" . htmlspecialchars($row['nr_legitimatie']) . "</td>";
             
-            // Afișăm anul maxim găsit
+            //Afisam anul maxim gasit
             echo "<td><strong>Anul " . htmlspecialchars($row['an_curent']) . "</strong></td>";
             echo "</tr>";
         }

@@ -14,7 +14,7 @@
 </head>
 <body>
 
-    <a href="index.php" class="back-link">⬅ Înapoi la Meniu</a>
+    <a href="index.php" class="back-link">Inapoi la Meniu</a>
 
     <h1>Raport Detaliat Note Promovate</h1>
     <p>Lista disciplinelor promovate, ordonata conform cerintei:</p>
@@ -24,9 +24,9 @@
         $db = new SQLite3('proiect.db');
 
         // Interogarea SQL
-        // 1. JOIN între Studenti și Note pentru a avea numele studentului lângă notă
-        // 2. WHERE N.nota_obtinuta >= 5 -> Filtrăm doar examenele luate
-        // 3. ORDER BY -> Ordonarea complexă cerută în PDF
+        // 1. JOIN intre Studenti și Note pentru a avea numele studentului langa nota
+        // 2. WHERE N.nota_obtinuta >= 5 -> Eliminam din lista orice nota sub 5
+        // 3. ORDER BY -> Codul sorteaza datele mai intai dupa Nume, apoi dupa Prenume, apoi cronologic dupa Anul de studiu si in final alfabetic dupa Disciplina
         $sql = "SELECT S.nume, S.prenume, S.nr_legitimatie, N.disciplina, N.nota_obtinuta, N.an_studiu
                 FROM Note N
                 JOIN Studenti S ON N.nr_legitimatie_stud = S.nr_legitimatie

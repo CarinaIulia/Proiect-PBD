@@ -16,22 +16,22 @@
 </head>
 <body>
 
-    <h1>Evidenta Studenti - Proiect BD</h1>
+    <h1>Evidenta Studenti</h1>
     <p>Selectati un raport pentru a vizualiza datele:</p>
 
     <ul>
         <li><a href="task4.php">Task 4: Studenti cu restante</a></li>
-        <li><a href="task5.php">Task 5: Raport general studenti (Anul maxim)</a></li>
+        <li><a href="task5.php">Task 5: Raport general studenti</a></li>
         <li><a href="task6.php">Task 6: Raport detaliat note</a></li>
-        <li><a href="task8.php">Task 8: Calcul promovabilitate disciplina (Functie)</a></li>
-        <li><a href="task9.php">Task 9: Studenti cu note sub 5 (2 ani consecutivi)</a></li>
+        <li><a href="task8.php">Task 8: Calcul promovabilitate disciplina</a></li>
+        <li><a href="task9.php">Task 9: Studenti cu note sub 5</a></li>
         <li><a href="task10.php">Task 10: Studentul cu cele mai multe prezentari</a></li>
     </ul>
 
     <div class="admin-zone">
         <h3>Zona Administrativa (Setup)</h3>
         <ul>
-            <li><a href="setup.php">Re-initializare Baza de Date (Sterge tot!)</a></li>
+            <li><a href="setup.php">Re-initializare Baza de Date (Sterge tot)</a></li>
             <li><a href="populare.php">Populare cu date de test</a></li>
         </ul>
     </div>

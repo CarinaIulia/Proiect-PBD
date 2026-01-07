@@ -8,22 +8,21 @@ try {
     if (!file_exists($db_file)) {
         throw new Exception("Eroare: Baza de date nu exista! Rulati setup.php o singura data la inceput.");
     }
-    $db = new SQLite3($db_file);
+    $db = new SQLite3($db_file); // Deschide fisierul bazei de date ptr a putea scrie in el
 
-    // 1. Începem tranzacția
+    // 1. Incepem tranzactia
     $db->exec('BEGIN');
     
-    // Ștergem mai întâi NOTELE (copilul), apoi STUDENȚII (părintele)
-    // pentru a nu avea erori de cheie externă.
+    // Stergem mai intai NOTELE, apoi STUDENTII pentru a nu avea erori de cheie externa (duplicate)
     $db->exec("DELETE FROM Note");
     $db->exec("DELETE FROM Studenti");
 
-    // Resetăm contorul pentru ID-uri (ca să înceapă iar de la 1 la Note)
+    // Resetam ID-ul notelor, astfel incat prima nota adaugata sa aiba din nou ID-ul 1
     $db->exec("DELETE FROM sqlite_sequence WHERE name='Note'");
 
-    echo "<p style='color:blue;'>Datele vechi au fost șterse. Se introduc datele curate...</p>";
+    echo "<p style='color:blue;'>Datele vechi au fost șterse. Se introduc datele curate.</p>";
 
-    // 1. Introducem STUDENȚII
+    // 1. Introducem STUDENTII
     $db->exec("INSERT INTO Studenti (nr_legitimatie, nume, prenume) VALUES ('123456', 'Popa', 'Ion')");
     $db->exec("INSERT INTO Studenti (nr_legitimatie, nume, prenume) VALUES ('123457', 'Adam', 'Gheorghe')");
     $db->exec("INSERT INTO Studenti (nr_legitimatie, nume, prenume) VALUES ('123458', 'Pop', 'George')");
@@ -50,7 +49,7 @@ try {
 
     echo "<p>✅ Notele au fost adăugate și mediile recalculate.</p>";
 
-    // Validăm totul
+    // Validam totul
     $db->exec('COMMIT');
     
     echo "<h2>Baza de date este acum proaspata și fara duplicate!</h2>";
