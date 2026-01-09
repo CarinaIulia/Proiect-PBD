@@ -47,12 +47,12 @@ try {
     $db->exec("INSERT INTO Note (nr_legitimatie_stud, disciplina, an_studiu, nr_prezentare, data_prezentarii, nota_obtinuta) 
                VALUES ('123458', 'Matematica', 1, 1, '2002-12-12', 10)");
 
-    echo "<p>✅ Notele au fost adăugate și mediile recalculate.</p>";
+    echo "<p>Notele au fost adaugate si mediile recalculate.</p>";
 
     // Validam totul
     $db->exec('COMMIT');
     
-    echo "<h2>Baza de date este acum proaspata și fara duplicate!</h2>";
+    echo "<h2>Baza de date este acum proaspata si fara duplicate!</h2>";
 
 } catch (Exception $e) {
     $db->exec('ROLLBACK');

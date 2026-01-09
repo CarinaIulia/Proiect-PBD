@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>Promovabilitate</title>
     <style>
-        body { font-family: sans-serif; margin: 40px; }
-        .result-box { margin-top: 20px; padding: 15px; background: #e8f5e9; border: 1px solid #4caf50; display: inline-block; }
-        select, button { padding: 10px; font-size: 16px; }
+        body { font-family: Arial, sans-serif; margin: 30px; line-height: 1.6; }
+        .result-box { margin-top: 20px; padding: 15px; background: #e7f3fe; border-left: 6px solid #2196F3; display: inline-block; font-weight: bold; }
+        select, button { padding: 8px; font-size: 16px; }
         .back-link { display: inline-block; margin-bottom: 20px; font-weight: bold; text-decoration: none; color: #007bff; }
     </style>
 </head>
@@ -37,7 +37,7 @@
         $total = $resTotal['total'];
 
         if ($total == 0) {
-            return "Nu există note pentru această disciplină.";
+            return "Nu exista note pentru aceasta disciplina.";
         }
 
         //Numaram cati studenti au promovat (Nota >= 5)
@@ -50,7 +50,7 @@
         $procent = ($promovati / $total) * 100;
         
         //Returnam textul formatat
-        return "Rata de promovare la <strong>$numeDisciplina</strong> este: " . number_format($procent, 2) . "% ($promovati din $total studenți)."; //fctia number_format($procent, 2) este folosita pentru a afiaa rezultatul cu fix doua zecimale
+        return "Rata de promovare la <strong>$numeDisciplina</strong> este: " . number_format($procent, 2) . "% ($promovati din $total studenti)."; //fctia number_format($procent, 2) este folosita pentru a afiaa rezultatul cu fix doua zecimale
     }
 
     //APLICAREA FUNCTIEI (Daca utilizatorul a apasat butonul)

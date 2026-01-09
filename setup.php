@@ -2,7 +2,7 @@
 // Numele fisierului bazei de date
 $db_file = 'proiect.db';
 
-// Numele fisierului cu structura SQL
+// Numele fisierului cu instructiunile de constructie (comenzile SQL)
 $sql_file = 'creare_db.sql';
 
 echo "<h1> Setup Proiect Baze de Date</h1>";

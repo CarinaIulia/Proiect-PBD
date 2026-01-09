@@ -5,9 +5,9 @@
     <title>Top Prezente</title>
     <style>
         body { font-family: sans-serif; margin: 40px; }
-        .winner-card { border: 2px solid #ffc107; background: #fffde7; padding: 20px; border-radius: 8px; max-width: 600px; }
-        h2 { margin-top: 0; color: #ff8f00; }
-        .stat { font-size: 1.2em; margin: 10px 0; }
+        .winner-card { margin-top: 20px; padding: 20px; background-color: #e7f3fe; border-left: 6px solid #2196F3; max-width: 600px; }
+        h2 { margin-top: 0; color: #0d47a1; font-size: 1.8em; }
+        .stat { font-size: 1.2em; margin: 10px 0; color: #333; }
         .back-link { display: inline-block; margin-bottom: 20px; font-weight: bold; text-decoration: none; color: #007bff; }
     </style>
 </head>
@@ -31,7 +31,7 @@
         $resTop = $db->querySingle($sqlTop, true);
 
         if (!$resTop) {
-            echo "<p>Nu există date în baza de date.</p>";
+            echo "<p>Nu exista date in baza de date.</p>";
         } else {
             $legitimatie = $resTop['nr_legitimatie_stud'];
             $totalPrezentari = $resTop['total_prezentari'];

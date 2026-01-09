@@ -23,29 +23,27 @@
     try {
         $db = new SQLite3('proiect.db');
 
-        // LOGICA SQL:
         // Cautam studenti unde (Nota maxima in Anul X < 5) SI (Nota maxima in Anul X+1 < 5)
         // Folosim UNION pentru a uni cazurile "Anul 1+2" cu "Anul 2+3"
         
-        $sql = "
-            SELECT S.nume, S.prenume, S.nr_legitimatie, 'Anul 1 și 2' as ani_problema
-            FROM Studenti S
-            WHERE 
-                (SELECT MAX(nota_obtinuta) FROM Note WHERE nr_legitimatie_stud = S.nr_legitimatie AND an_studiu = 1) < 5
-                AND
-                (SELECT MAX(nota_obtinuta) FROM Note WHERE nr_legitimatie_stud = S.nr_legitimatie AND an_studiu = 2) < 5
-            
-            UNION
+        $sql = "SELECT S.nume, S.prenume, S.nr_legitimatie, 'Anul 1 și 2' as ani_problema
+                FROM Studenti S
+                WHERE 
+                    (SELECT MAX(nota_obtinuta) FROM Note WHERE nr_legitimatie_stud = S.nr_legitimatie AND an_studiu = 1) < 5
+                    AND
+                    (SELECT MAX(nota_obtinuta) FROM Note WHERE nr_legitimatie_stud = S.nr_legitimatie AND an_studiu = 2) < 5
+                
+                UNION
 
-            SELECT S.nume, S.prenume, S.nr_legitimatie, 'Anul 2 și 3' as ani_problema
-            FROM Studenti S
-            WHERE 
-                (SELECT MAX(nota_obtinuta) FROM Note WHERE nr_legitimatie_stud = S.nr_legitimatie AND an_studiu = 2) < 5
-                AND
-                (SELECT MAX(nota_obtinuta) FROM Note WHERE nr_legitimatie_stud = S.nr_legitimatie AND an_studiu = 3) < 5
+                SELECT S.nume, S.prenume, S.nr_legitimatie, 'Anul 2 și 3' as ani_problema
+                FROM Studenti S
+                WHERE 
+                    (SELECT MAX(nota_obtinuta) FROM Note WHERE nr_legitimatie_stud = S.nr_legitimatie AND an_studiu = 2) < 5
+                    AND
+                    (SELECT MAX(nota_obtinuta) FROM Note WHERE nr_legitimatie_stud = S.nr_legitimatie AND an_studiu = 3) < 5
         ";
 
-        $result = $db->query($sql);
+        $result = $db->query($sql); //trimite comanda complexa catre baza de date
 
         // Verificam daca avem rezultate
         $found = false;
@@ -54,7 +52,7 @@
         echo "<tr>
                 <th>Nume</th>
                 <th>Prenume</th>
-                <th>Nr. Legitimație</th>
+                <th>Nr. Legitimatie</th>
                 <th>Ani Consecutivi cu Probleme</th>
               </tr>";
 
@@ -70,7 +68,7 @@
         echo "</table>";
 
         if (!$found) {
-            echo "<p><em>Din fericire, niciun student din baza de date curentă nu se află în această situație!</em></p>";
+            echo "<p><em>Din fericire, niciun student din baza de date curenta nu se afla in aceasta situatie.</em></p>";
         }
 
     } catch (Exception $e) {

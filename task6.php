@@ -23,7 +23,6 @@
     try {
         $db = new SQLite3('proiect.db');
 
-        // Interogarea SQL
         // 1. JOIN intre Studenti și Note pentru a avea numele studentului langa nota
         // 2. WHERE N.nota_obtinuta >= 5 -> Eliminam din lista orice nota sub 5
         // 3. ORDER BY -> Codul sorteaza datele mai intai dupa Nume, apoi dupa Prenume, apoi cronologic dupa Anul de studiu si in final alfabetic dupa Disciplina
@@ -39,7 +38,7 @@
         echo "<tr>
                 <th>Nume</th>
                 <th>Prenume</th>
-                <th>Nr. Legitimație</th>
+                <th>Nr. Legitimatie</th>
                 <th>An Studiu</th>
                 <th>Disciplina</th>
                 <th>Nota</th>

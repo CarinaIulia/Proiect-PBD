@@ -23,7 +23,6 @@
     try {
         $db = new SQLite3('proiect.db');
 
-        // Interogarea SQL
         //1. Selectam datele studentului
         //2. Folosim MAX(N.an_studiu) pentru a gasi cel mai mare an
         //3. Facem GROUP BY pentru a comprima toate notele unui student intr-un singur rand
@@ -43,8 +42,8 @@
                 <th>Anul de Studiu (Calculat)</th>
               </tr>";
 
-        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-            echo "<tr>";
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) { // sistemul parcurge rand cu rand rezultatele returnate de baza de date folosind $result->fetchArray(SQLITE3_ASSOC)
+            echo "<tr>"; // ptr fiecare student cream un nou rand in tabel
             echo "<td>" . htmlspecialchars($row['nume']) . "</td>";
             echo "<td>" . htmlspecialchars($row['prenume']) . "</td>";
             echo "<td>" . htmlspecialchars($row['nr_legitimatie']) . "</td>";
